@@ -13,7 +13,7 @@ export default class DisplayContactsDayOne extends LightningElement {
 
         }
         else if(error){
-            console.log("this is error "+error);
+            console.log("this is error "+error.body.message);
         }
     }
 
