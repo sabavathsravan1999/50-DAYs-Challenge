@@ -1,0 +1,71 @@
+public class OpportunitTaskPreventyHanlder {
+    /*everytime create a new opportunity a task should also be created and assigned to the opportunity owner,
+      now along with you have to put a validation that once this task gets closed 
+      then only ur allowed to move the opprtunity stage/status of opprtunity*/ 
+    public static void opprTaskPreventActivity(List<Opportunity> records){
+        List<Task> insTask=new List<Task>();
+        for(Opportunity eo :records){
+            Task t=new Task();
+            t.Subject='action '+eo.Name;
+            t.Status='Not Started';
+            t.OwnerId=eo.OwnerId;
+            t.WhatId=eo.Id;
+            insTask.add(t);
+        }      
+        if(!insTask.isEmpty()){
+            insert insTask;   
+        }
+    }
+
+    /*public static void validationActivity(List<Opportunity> newRecords, Map<Id, Opportunity>oldRecords){
+        Set<Id> oppids=new Set<Id>();
+        for(Opportunity eo : newRecords){
+            if(eo.StageName!=oldRecords.get(eo.Id).StageName){
+                oppids.add(eo.Id);
+            }
+        }
+		Map<Id, Task> oppoftask=new Map<Id, Task>([Select Id, Status, WhatId from Task where WhatId IN : oppids]);
+//this will fetch the single TASK OF THE OPPO	
+        for(Opportunity eo : newRecords){
+            if(eo.StageName!=oldRecords.get(eo.Id).StageName){
+                for(Task et : oppoftask.values()){
+                    if(et.Status!='Completed'){
+                        eo.addError('your Not allowed to change the Stage or Status until the all the Task are Closed or Completed');
+                    }
+                }
+            }
+        }
+      
+    }*/
+
+    public static void validationActivity(List<Opportunity> newRecords, Map<Id, Opportunity>oldRecords){
+        Set<Id> oppids=new Set<Id>();
+        for(Opportunity eo : newRecords){
+            if(eo.StageName!=oldRecords.get(eo.Id).StageName){
+                oppids.add(eo.Id);
+            }
+        }
+		Map<Id, Opportunity> oppoftask=new Map<Id, Opportunity>([Select Id, (Select Id, Status, WhatId from Tasks) from Opportunity where Id IN : oppids]);
+        for(Opportunity eo : newRecords){
+//Salesforce only allows you to call addError() on trigger context variables (like Trigger.new), not on records fetched via SOQL.
+            if(oppids.contains(eo.Id)){
+                List<Task> task=oppoftask.get(eo.Id).Tasks;
+            	Boolean taskCompleted=true;
+                for(Task et : task){
+                    if(et.Status!='Completed'){
+                        taskCompleted=false;
+                        break;
+                    }
+                }
+                if(!taskCompleted){
+                eo.addError('your Not allowed to change the Stage or Status until the all the Task are Closed or Completed');
+            }
+            }
+            	
+            
+        }
+      
+    }
+
+
+}
