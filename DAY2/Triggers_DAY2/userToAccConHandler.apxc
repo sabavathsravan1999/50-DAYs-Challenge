@@ -1,0 +1,73 @@
+/*  DAY 2
+TRIGGER: Write a trigger, on user insertion we need to create an account for that user and contact for that account 
+*/
+public class userToAccConHandler {    
+   /* the Regular way of doinf CASUSES DML EXCEPTION
+    
+     public static void usertoaccconActivity(List<User> newRecords){
+		List<Account> acctoInsrt=new List<Account>();
+		
+		for(User eu : newRecords){
+			Account acc=new Account();
+			acc.Name=eu.Name;
+			acctoInsrt.add(acc);
+	
+		}
+		if(!acctoInsrt.isEmpty()){
+			insert acctoInsrt;
+		}
+		//now to create a contact
+		// Lastname, AccountId
+		List<Contact> contoInsrt=new List<Contact>();
+        integer i=0;
+		for(User eu : newRecords){
+			Contact con=new Contact();
+			con.LastName=eu.Name;
+			con.AccountId=acctoInsrt[i].Id;
+            i++;
+			contoInsrt.add(con);
+		}
+		if(!contoInsrt.isEmpty()){
+			insert contoInsrt;
+		}
+		
+	}*/
+    //OVERCOME THE DML EXCEPTION
+    public static void usertoaccconActivity(List<User> newRecords){
+      Set<Id> userIds=new Set<Id>();
+        for(User eu : newRecords){
+            userIds.add(eu.Id);
+        }
+        usertoAccConDMLexpn(userIds);
+    }
+    
+    @future
+    public static void usertoAccConDMLexpn(Set<Id> ids){
+        List<User> users=[Select Id, FirstName, LastName, Name, Alias from User];
+        List<Account> acctoInsrt=new List<Account>();
+		
+		for(User eu : users){
+			Account acc=new Account();
+			acc.Name=eu.Name;
+			acctoInsrt.add(acc);
+	
+		}
+		if(!acctoInsrt.isEmpty()){
+			insert acctoInsrt;
+		}
+        //now to create a contact
+		// Lastname, AccountId
+		List<Contact> contoInsrt=new List<Contact>();
+        integer i=0;
+		for(User eu : users){
+			Contact con=new Contact();
+			con.LastName=eu.Name;
+			con.AccountId=acctoInsrt[i].Id;
+            i++;
+			contoInsrt.add(con);
+		}
+		if(!contoInsrt.isEmpty()){
+			insert contoInsrt;
+		}
+    }	
+}
