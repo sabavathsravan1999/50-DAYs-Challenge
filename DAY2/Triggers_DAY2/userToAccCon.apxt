@@ -1,0 +1,9 @@
+
+/* DAY 2
+TRIGGER: Write a trigger, on user insertion we need to create an account for that user and contact for that account 
+*/
+trigger userToAccCon on User (after insert) {
+	if(Trigger.isAfter && Trigger.isInsert){
+		userToAccConHandler.usertoaccconActivity(Trigger.new);
+	}
+}
