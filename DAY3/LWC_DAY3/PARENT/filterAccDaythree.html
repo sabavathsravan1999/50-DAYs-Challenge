@@ -1,0 +1,15 @@
+<!-- Implement search functionality in LWC to filter accounts based on name. 
+SEARCH FILED IN THE PARENT 
+RESULT IS IN THE CHILD-->
+
+<template>
+    <lightning-card title="FILER THE ACCOUNTS BY USING NAME">
+        <lightning-input
+        label="Enter the Account Name"
+        onchange={onchangeHandle}>
+        </lightning-input>
+    </lightning-card>
+
+  <c-filter-acc-daythree-childcomponent parentdata={data}> </c-filter-acc-daythree-childcomponent>
+
+</template>
