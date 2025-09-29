@@ -1,0 +1,34 @@
+/*
+ you have to stop the opportunity creation if the opportunities associated account does not have an active contact now 
+how will you decide and a contact is an active contact?
+ if a contact has a valid "phone number" and a valid "e-mail ID" then it's a valid contact 
+otherwise if they are blank or invalid they are not valid contacts so opportunity should have an account associated 
+and that account should have an active contact associated then only you will allow the opportunity creation 
+*/
+
+public class oppoprevDayThreeHandler {
+    public static void oppoAccConActivity(List<Opportunity> newRecords){
+        Set<Id> accids=new Set<Id>();
+        for(Opportunity eo: newRecords){
+            if(eo.AccountId!=null){
+                accids.add(eo.AccountId);
+            }
+        }
+        
+        Map<Id, Account> accofCon=new Map<Id, Account>([Select Id, Name, (Select Id, AccountId, Phone, Email from Contacts) from Account where Id IN : accids]);
+        for(Opportunity eo : newRecords){
+           if(eo.AccountId!=null){
+                for(Contact ec : accofCon.get(eo.AccountId).Contacts){
+                    if(ec.Phone==null || ec.Email==null || String.isBlank(ec.Phone)==true || String.isBlank(ec.Email)==true){
+                        eo.addError('Phone and Email is not Valid of Contact associated with Account of Oppo');
+                    }
+                }
+                
+            }else{
+                eo.addError('PLease mention Account Name');
+             }
+        }
+        
+    }
+
+}
