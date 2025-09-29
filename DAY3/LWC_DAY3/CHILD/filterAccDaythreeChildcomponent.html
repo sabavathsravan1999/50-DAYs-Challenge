@@ -1,0 +1,14 @@
+<!-- Implement search functionality in LWC to filter accounts based on name. 
+SEARCH FILED IN THE PARENT 
+RESULT IS IN THE CHILD-->
+<template>
+    <lightning-card title="Child Component to Display the Accounts">
+
+        <lightning-datatable
+        key-field="Id"
+        data={parentdata}
+        columns={columns}>
+        </lightning-datatable>
+    </lightning-card>
+
+</template>
