@@ -6,3 +6,4 @@ problem statment:
    and that account should have an active contact associated then only you will allow the opportunity creation 
 
 Linkeid: 
+https://www.linkedin.com/posts/sabavath-sravan-87834a19b_day3-salesforce-salesforcedeveloper-activity-7378454460949446657-VpJt?utm_source=share&utm_medium=member_desktop&rcm=ACoAAC7b4FwBgvP9Je3kJ7FWP7Hnh3vOafKkID0
