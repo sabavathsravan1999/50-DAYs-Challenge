@@ -1,0 +1,23 @@
+<template>
+    <lightning-layout>
+        <lightning-layout-item size="8">
+            <lightning-card title="component A">
+                <div>
+                    <lightning-datatable 
+                        key-field="Id" 
+                        data={account} 
+                        columns={columns} 
+                        onrowaction={onrwoHandelr}>
+                    </lightning-datatable>
+                </div>
+            </lightning-card>
+        </lightning-layout-item>
+<!--         
+    this is the CHILD cOMPONENT
+        <lightning-layout-item size="6">
+            <template lwc:if={contacts}>
+                <c-capgemini-comp-b contacts={contacts}></c-capgemini-comp-b>
+            </template>
+        </lightning-layout-item> -->
+    </lightning-layout>
+</template>
