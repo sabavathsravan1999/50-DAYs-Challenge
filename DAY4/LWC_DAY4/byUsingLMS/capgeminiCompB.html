@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="Component b of contacts">
+        <div>
+            <p> <strong> Accont of </strong> {AccountName}</p>
+            <lightning-datatable
+                key-field="id"
+                data={contacts}
+                columns={columns}
+                hide-checkbox-column>
+            </lightning-datatable>
+        </div>
+    </lightning-card>
+
+</template>
