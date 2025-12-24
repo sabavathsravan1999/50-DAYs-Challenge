@@ -1,0 +1,61 @@
+public class oppoTaskAdditonalRequirement_cls {
+    public static void oppoTaskInsertActivity(List<Opportunity> records){
+        //insert the task as soosn as the Opportunity is created
+		List<Task> insTOTask=new List<Task>();
+		for(Opportunity eo : records){
+			Task t=new Task();
+			t.Subject='oppo created Task';
+			t.Priority='Normal';
+			t.Status='Not Started';
+			t.WhatId=eo.Id;
+			insTOTask.add(t);
+		}
+		if(!insTOTask.isEmpty()){
+			insert insTOTask;
+		}
+    }
+    public static void oppoUpdateActivity(List<Opportunity> newRecords, Map<Id, Opportunity>oldRecords){
+        Set<Id> allOppIds=new Set<Id>();
+		for(Opportunity eo : newRecords){
+			if(eo.StageName!=oldRecords.get(eo.Id).StageName){
+				allOppIds.add(eo.Id);
+			}
+		}
+		if(allOppIds.isEmpty()) return;
+		
+		//Map<Id, Opportunity> allOppvsTask=new Map<Id, Opportunity>([select Id, StageName,(select Id, Status from Tasks) from Opportunity where Id IN : allOppIds]);
+		
+        //for validations
+        Set<Id> tasksNotClosed=new Set<Id>();
+        for(Task et : [select Id, WhatId, Status from Task where whatId IN:allOppIds AND Status!='Completed']){
+            tasksNotClosed.add(et.WhatId);         
+        }
+		for(Opportunity eo : newRecords){
+			if(eo.StageName!=oldRecords.get(eo.Id).StageName && tasksNotClosed.contains(eo.Id)){
+				/*
+				 * //this below code is bit lenghty process
+				 	if(allOppvsTask.get(eo.Id).Tasks.size()>0){
+					Boolean validateTasks=validateTaskClosedActivity(allOppvsTask.get(eo.Id).Tasks);
+					if(validateTasks==false){
+						eo.addError('Tasks are not closed, please close the task to change the Opportunity Stage');
+					}
+				}*/
+                
+				eo.addError('Tasks are not closed, please close the task to change the Opportunity Stage');
+			}
+			
+		}
+    }
+   /* //for validation
+    public static Boolean validateTaskClosedActivity(List<Task> OppOfallTaks){
+		//example 3 task 
+		for(Task et : OppOfallTaks){
+			if(et.Status!='Completed'){
+				return false;
+			}
+		}
+		return true;
+	}*/
+
+
+}
