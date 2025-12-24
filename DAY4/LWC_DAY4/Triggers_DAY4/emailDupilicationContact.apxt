@@ -1,0 +1,27 @@
+//📌 Scenario: Write a trigger to prevent the insertion of contacts that have duplicate email.
+
+trigger emailDupilicationContact on Contact (before insert) {	
+	// now i have all the new emails
+	Set<String> newEmails=new Set<String>();
+	for(Contact ec : Trigger.new){
+		if(ec.Email!=null){
+			newEmails.add(ec.Email.toLowerCase());
+		}	
+	}
+	//for checking the new emails with existing emails i need existing emails
+	Map<String, Contact> exEmails=new Map<String, Contact>();
+	for(Contact ec :  [Select Id, Email from Contact where Email IN : newEmails]){
+		exEmails.put(ec.Email.toLowerCase(), ec);
+		
+	}
+	
+	for(Contact ec : Trigger.new){
+		//now check if new email is present in the existingEmials list if so don't allow to create new contact
+		if(ec.Email!=null && exEmails.containsKey(ec.Email.toLowerCase())){
+			ec.addError('this contact email is already there please use new email');
+		}
+	}
+
+
+
+}
