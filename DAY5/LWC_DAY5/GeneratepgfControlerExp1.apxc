@@ -1,0 +1,48 @@
+public class GeneratepgfControlerExp1 {
+    @AuraEnabled
+	public static Contact getpdf(String name, String Phone, String Email){
+		Contact con=new Contact();
+		con.LastName=name;
+		con.Phone=Phone;
+		con.Email=Email;
+		insert con;
+		
+		//create a pdf with above  details
+		String html='<html><body>'
+				+	'<h1> Contact Details </h1>'
+				+	'<p>Contact Name: '+con.LastName +'</p>'
+				+	'<p>Contact Phone: '+con.Phone +'</p>'
+				+	'<p>Contact Email: '+con.Email+ '</p>'
+				+	'</body></html>';
+
+		
+		//conver to pdf
+		Blob pdfblob=Blob.toPdf(html);
+		
+		//save the pdf to salesforce
+		ContentVersion cv=new ContentVersion();
+		cv.Title=con.LastName+' PDF';
+		cv.PathOnClient=con.LastName+'.pdf';
+		cv.VersionData=pdfblob;
+		cv.IsMajorVersion=true;
+		cv.FirstPublishLocationId=con.Id;
+		insert cv;
+		
+		//attach to the EmailFileAttchament for attching to email
+		Messaging.EmailFileAttachment efa=new Messaging.EmailFileAttachment();
+		efa.setFileName(con.LastName+'_Contactdetails.pdf');
+		efa.setBody(pdfblob);
+		efa.setContentType('application/pdf');
+		
+		//now send Email to Contatct Email
+		Messaging.SingleEmailMessage emails=new Messaging.SingleEmailMessage();
+		emails.setSubject('ContactDetials pdf Of '+con.LastName);
+		emails.setToAddresses(new String[] {con.Email});
+		emails.setPlainTextBody('this is the pdf of Contact details refer to the attachment');
+		emails.setFileAttachments(new Messaging.EmailFileAttachment[] {efa});
+		
+		Messaging.sendEmail(new Messaging.SingleEmailMessage[] {emails});
+		
+		return con;
+    }
+}
