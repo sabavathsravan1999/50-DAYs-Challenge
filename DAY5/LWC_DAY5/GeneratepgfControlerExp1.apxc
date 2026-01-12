@@ -1,10 +1,16 @@
 public class GeneratepgfControlerExp1 {
+
+ public class ContactWrapper {
+        @AuraEnabled public String conname { get; set; }
+        @AuraEnabled public String Phone { get; set; }
+        @AuraEnabled public String Email { get; set; }
+    }
     @AuraEnabled
-	public static Contact getpdf(String name, String Phone, String Email){
+	public static Contact getpdf(ContactWrapper cw){
 		Contact con=new Contact();
-		con.LastName=name;
-		con.Phone=Phone;
-		con.Email=Email;
+		con.LastName=cw.conname;
+		con.Phone=cw.Phone;
+		con.Email=cw.Email;
 		insert con;
 		
 		//create a pdf with above  details
