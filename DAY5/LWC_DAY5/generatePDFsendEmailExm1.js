@@ -9,7 +9,8 @@ export default class GeneratePDFsendEmailExm1 extends LightningElement {
 		this[event.target.name]=event.target.value;
 	}
     handleclick(event){
-        getpdf({name:this.conname, Phone:this.Phone, Email:this.Email})
+		     const wrap={conname:this.conname, Phone:this.Phone, Email:this.Email};
+      /*  getpdf({name:this.conname, Phone:this.Phone, Email:this.Email})*/
         .then(result => {
             const ev=new ShowToastEvent({
                 title:'Data Pdf send to Email',
